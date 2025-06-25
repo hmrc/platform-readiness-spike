@@ -1,7 +1,7 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "3.7.1"
+ThisBuild / scalaVersion := "3.3.6"
 
 lazy val microservice = Project("platform-readiness-spike", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
