@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,22 @@
 
 package uk.gov.hmrc.platformreadinessspike.controllers
 
+import play.api.Logging
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Reads}
+import play.api.mvc.{ControllerComponents, Request, Result}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import javax.inject.{Inject, Singleton}
+
 import scala.concurrent.Future
 
-@Singleton()
-class MicroserviceHelloWorldController @Inject()(cc: ControllerComponents)
-    extends BackendController(cc) {
+abstract class BaseController(cc: ControllerComponents) extends BackendController(cc) with Logging {
 
-  def hello(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok("Hello world"))
-  }
+  def withValidJson[T](f: T => Future[Result])(implicit request: Request[JsValue], reads: Reads[T]): Future[Result] =
+    request.body.validate[T] match {
+      case JsSuccess(value, _) => f(value)
+      case JsError(e)          =>
+        val errorString = e.flatMap(_._2).mkString(",")
+        logger.error(s"Error for ${request.body} with errors: $errorString")
+        Future.successful(BadRequest("Invalid JSON"))
+    }
+
 }

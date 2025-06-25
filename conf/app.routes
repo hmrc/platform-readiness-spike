@@ -1,3 +1,4 @@
 # microservice specific routes
 
-GET        /hello-world             uk.gov.hmrc.platformreadinessspike.controllers.MicroserviceHelloWorldController.hello()
+GET        /user-answers/:userId             uk.gov.hmrc.platformreadinessspike.controllers.UserAnswersController.getUserAnswers(userId)
+PUT        /user-answers/:userId             uk.gov.hmrc.platformreadinessspike.controllers.UserAnswersController.getUserAnswers(userId)
