@@ -17,13 +17,12 @@
 package uk.gov.hmrc.platformreadinessspike.controllers
 
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.platformreadinessspike.models.UserAnswers
 import uk.gov.hmrc.platformreadinessspike.repositories.SessionRepository
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton()
 class UserAnswersController @Inject()(

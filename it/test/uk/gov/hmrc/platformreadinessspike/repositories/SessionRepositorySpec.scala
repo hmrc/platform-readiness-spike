@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.platformreadinessspike.repositories
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import org.mockito.Mockito.when
 import org.mongodb.scala.model.Filters
 import org.scalactic.source.Position
@@ -35,6 +34,7 @@ import uk.gov.hmrc.play.bootstrap.dispatchers.MDCPropagatingExecutorService
 import java.time.temporal.ChronoUnit
 import java.time.{Clock, Instant, ZoneId}
 import java.util.concurrent.Executors
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 class SessionRepositorySpec

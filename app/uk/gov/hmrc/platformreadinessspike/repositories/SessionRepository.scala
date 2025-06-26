@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.platformreadinessspike.repositories
 
-import uk.gov.hmrc.platformreadinessspike.models.UserAnswers
 import org.mongodb.scala.SingleObservableFuture
 import org.mongodb.scala.bson.conversions.Bson
 import org.mongodb.scala.model.*
@@ -25,6 +24,7 @@ import uk.gov.hmrc.mongo.MongoComponent
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
 import uk.gov.hmrc.mongo.play.json.formats.MongoJavatimeFormats
 import uk.gov.hmrc.platformreadinessspike.config.AppConfig
+import uk.gov.hmrc.platformreadinessspike.models.UserAnswers
 import uk.gov.hmrc.play.http.logging.Mdc
 
 import java.time.{Clock, Instant}

@@ -30,7 +30,7 @@ class BaseControllerSpec extends AnyWordSpec with Matchers with ScalaFutures {
 
   object TestController extends BaseController(Helpers.stubControllerComponents())
 
-  val testUserAnswers = UserAnswers("123")
+  val testUserAnswers: UserAnswers = UserAnswers("123")
 
   "withValidJson" should {
     "call f when valid json is passed in" in {
