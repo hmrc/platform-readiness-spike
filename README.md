@@ -1,7 +1,7 @@
 
 # platform-readiness-spike
 
-This is a placeholder README.md for a new repository
+This is the backend service for https://github.com/hmrc/platform-readiness-spike-frontend
 
 ### License
 
