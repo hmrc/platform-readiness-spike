@@ -16,22 +16,21 @@
 
 package uk.gov.hmrc.platformreadinessspike.controllers
 
-import play.api.libs.json.Json
-
-import scala.concurrent.ExecutionContext.Implicits.global
+import org.mockito.Mockito
+import org.mockito.Mockito.when
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import org.mockito.Mockito.when
-import org.mockito.Mockito
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import play.api.test.{FakeHeaders, FakeRequest, Helpers}
 import uk.gov.hmrc.platformreadinessspike.models.UserAnswers
 import uk.gov.hmrc.platformreadinessspike.repositories.SessionRepository
 
 import java.time.{LocalDateTime, ZoneOffset}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class UserAnswersControllerSpec
