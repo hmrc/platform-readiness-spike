@@ -18,29 +18,30 @@ package uk.gov.hmrc.platformreadinessspike.controllers
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.platformreadinessspike.models.UserAnswers
-import uk.gov.hmrc.platformreadinessspike.repositories.SessionRepository
+import uk.gov.hmrc.platformreadinessspike.models.ServiceReview
+import uk.gov.hmrc.platformreadinessspike.repositories.ServiceReviewRepository
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton()
-class UserAnswersController @Inject()(
-   sessionRepository: SessionRepository,
-   cc: ControllerComponents
+class ServiceReviewController @Inject()(
+  serviceReviewRepository: ServiceReviewRepository,
+  cc: ControllerComponents
 )(implicit ec: ExecutionContext)
-    extends BaseController(cc) {
+  extends BaseController(cc) {
 
-  //look into getting userId from AUTH
-  def getUserAnswers(userId: String): Action[AnyContent] = Action.async { implicit request =>
-    sessionRepository.get(userId).map{
-      case Some(userAnswers) => Ok(Json.toJson(userAnswers))
-      case None              => NotFound("User Answer not found")
+  def getServiceReview(service: String): Action[AnyContent] = Action.async { implicit request =>
+    serviceReviewRepository.getServiceReview(service).map{
+      case Some(serviceReview)  => Ok(Json.toJson(serviceReview))
+      case None                 => NotFound("Service review not found")
     }
   }
-  def setUserAnswers(): Action[JsValue] = Action.async(parse.json) { implicit request =>
-    withValidJson[UserAnswers] { submission =>
-      sessionRepository.set(submission).map(_ => NoContent)
+
+  def setServiceReview(): Action[JsValue] = Action.async(parse.json) { implicit request =>
+    withValidJson[ServiceReview] { serviceReview =>
+      serviceReviewRepository.setServiceReview(serviceReview).map(_ => NoContent)
     }
   }
+
 }

@@ -26,14 +26,15 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import play.api.test.{FakeHeaders, FakeRequest, Helpers}
-import uk.gov.hmrc.platformreadinessspike.models.UserAnswers
-import uk.gov.hmrc.platformreadinessspike.repositories.SessionRepository
+import uk.gov.hmrc.platformreadinessspike.models.ServiceReview
+import uk.gov.hmrc.platformreadinessspike.repositories.ServiceReviewRepository
 
-import java.time.{LocalDateTime, ZoneOffset}
+import java.time.temporal.ChronoUnit
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class UserAnswersControllerSpec
+class ServiceReviewControllerSpec
   extends AnyWordSpec
     with Matchers
     with MockitoSugar
@@ -41,49 +42,53 @@ class UserAnswersControllerSpec
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    Mockito.reset(mockSessionRepository)
+    Mockito.reset(mockServiceReviewRepository)
   }
 
-  val mockSessionRepository = mock[SessionRepository]
+  private val mockServiceReviewRepository = mock[ServiceReviewRepository]
 
-  private val fakeRequest = FakeRequest("GET", "/")
-  private val controller = new UserAnswersController(mockSessionRepository,Helpers.stubControllerComponents())
-  val testUserAnswers = UserAnswers("123", lastUpdated = LocalDateTime.of(2022, 1, 1, 0, 0, 0).toInstant(ZoneOffset.UTC))
+  private val instant = Instant.now.truncatedTo(ChronoUnit.MILLIS)
+  private val controller = new ServiceReviewController(mockServiceReviewRepository, Helpers.stubControllerComponents())
 
-  "GET /user-answers/:userId" should {
+  private val serviceReview = ServiceReview(
+    service = "Service1",
+    lastReviewed = instant,
+    reviewStatus = "pass",
+    reviewerUsername = "Reviewer"
+  )
+
+  "GET /service-review/:service" should {
     "return 200" in {
-
-      when(mockSessionRepository.get("123")) thenReturn Future.successful(Some(testUserAnswers))
+      when(mockServiceReviewRepository.getServiceReview("Service1")) thenReturn Future.successful(Some(serviceReview))
 
       val fakeRequest =
-        FakeRequest("GET", "/user-answers/123")
-      val result = controller.getUserAnswers("123")(fakeRequest)
+        FakeRequest("GET", "/current-questions/Service1")
+      val result = controller.getServiceReview("Service1")(fakeRequest)
       status(result) shouldBe Status.OK
       val body = contentAsJson(result)
-      body shouldBe Json.toJson(testUserAnswers)
+      body shouldBe Json.toJson(serviceReview)
     }
 
     "return 404" in {
-      when(mockSessionRepository.get("123")) thenReturn Future.successful(None)
+      when(mockServiceReviewRepository.getServiceReview("Service1")) thenReturn Future.successful(None)
 
       val fakeRequest =
-        FakeRequest("GET", "/user-answers/123")
-      val result = controller.getUserAnswers("123")(fakeRequest)
+        FakeRequest("GET", "/current-questions/Service1")
+      val result = controller.getServiceReview("Service1")(fakeRequest)
       status(result) shouldBe Status.NOT_FOUND
     }
   }
 
-  "PUT /user-answers/:userId" should {
+  "POST /service-review/" should {
     "return 204" in {
-      when(mockSessionRepository.set(testUserAnswers)) thenReturn Future.successful(true)
-
+      when(mockServiceReviewRepository.setServiceReview(serviceReview)) thenReturn Future.unit
       val fakeRequest = FakeRequest(
         method = "PUT",
-        uri = "/user-answers/123",
+        uri = "/service-review/",
         headers = FakeHeaders(Seq()),
-        body = Json.toJson(testUserAnswers)
+        body = Json.toJson(serviceReview)
       )
-      val result = controller.setUserAnswers()(fakeRequest)
+      val result = controller.setServiceReview()(fakeRequest)
       status(result) shouldBe Status.NO_CONTENT
     }
   }
