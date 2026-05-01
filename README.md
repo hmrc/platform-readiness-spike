@@ -1,7 +1,7 @@
 
-# platform-readiness-spike
+# Platform Readiness 
 
-This is the backend service for https://github.com/hmrc/platform-readiness-spike-frontend
+This is the protected zone microservice facilitating storage of Platform Readiness Assessments which get surfaced to https://github.com/hmrc/platform-readiness-spike-frontend
 
 ### License
 
